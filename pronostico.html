@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!--
+
+    PAGINA: Pronóstico y Pique v3.1
+    PROYECTO: De la Caña al Plato
+    OBJETIVO: Mostrar clima + estado del pique + Panel del Guia con BD MySQL
+    AUTOR: Meta AI + Vos
+    ULTIMA ACT: 29/07/2026
+    DEPENDENCIAS: api_opiniones.php, Tabla MySQL: opiniones_pique
+
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pronóstico y Pique | De la Caña al Plato</title>
+
+  <!-- TAILWIND + FUENTES -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- ESTILOS PROPIOS -->
+  <style>
+    body { font-family: 'Lato', sans-serif; scroll-behavior: smooth; }
+    h1, h2, h3 { font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+.footer-link:hover { color: #00BFFF; }
+.pique-bueno { color: #22c55e; } /* Verde */
+.pique-regular { color: #f59e0b; } /* Naranja */
+.pique-malo { color: #ef4444; } /* Rojo */
+.input-buscar:focus { border-color: #00BFFF; box-shadow: 0 0 0 2px #00BFFF40; }
+    /* Scroll personalizado para la lista de opiniones */
+   #lista-opiniones::-webkit-scrollbar { width: 6px; }
+   #lista-opiniones::-webkit-scrollbar-thumb { background: #00BFFF; border-radius: 10px; }
+  </style>
+</head>
+<body class="bg-[#0a1a2a] text-white">
+
+  <!-- ============================================
+       BLOQUE 1: HEADER Y NAVEGACION
+       OBJETIVO: Menu fijo superior con logo y links
+  ============================================ -->
+  <header class="fixed top-0 left-0 w-full bg-[#0a1a2a]/90 backdrop-blur-md z-50 border-b border-[#1a2a3a]">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition">
+        <img src="logo-caña2.png" alt="Logo" class="h-10 w-10">
+        <h1 class="text-xl md:text-2xl font-bold tracking-wider">DE LA <span class="text-[#00BFFF]">CAÑA</span> AL <span class="text-[#00BFFF]">PLATO</span></h1>
+      </a>
+      <nav class="hidden md:flex gap-6">
+        <a href="#mapa" class="hover:text-[#00BFFF] transition">Zonas de Pesca Bonaerense</a>
+        <a href="#platos" class="hover:text-[#00BFFF] transition">Platos Estrellas</a>
+        <a href="#videos" class="hover:text-[#00BFFF] transition">YouTube</a>
+        <a href="#galeria" class="hover:text-[#00BFFF] transition">Galería</a>
+        <a href="reglas.html" class="hover:text-[#00BFFF] transition">Reglas</a>
+        <a href="pronostico2.html" class="text-[#00BFFF] font-bold">Pronóstico</a>
+    </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============================================
+       BLOQUE 2: SECCION PRONOSTICO Y PIQUE
+       OBJETIVO: Contenedor principal de toda la logica
+  ============================================ -->
+    <section id="pronostico" class="pt-32 pb-20 px-6 bg-[#0a1a2a]">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl md:text-5xl font-bold mb-4 text-[#00BFFF]">PRONÓSTICO Y PIQUE</h2>
+        <p class="mb-8 text-lg text-gray-300">¿Vale la pena salir hoy? Buscá tu ciudad de Buenos Aires</p>
+
+        <!-- SUB-BLOQUE 2.1: BUSCADOR DE CIUDAD -->
+        <div class="max-w-xl mx-auto mb-10">
+          <form id="form-buscar" class="flex gap-2">
+            <input type="text" id="input-ciudad" placeholder="Ej: Azul, Mar del Plata, Chascomus" class="input-buscar w-full bg-[#1a2a3a] border-[#1a2a3a] rounded-lg px-4 py-3 text-white outline-none transition" required>
+            <button type="submit" class="bg-[#00BFFF] hover:bg-[#009acd] text-black font-bold px-6 py-3 rounded-lg transition hover:scale-105">Buscar</button>
+          </form>
+        </div>
+
+        <!-- SUB-BLOQUE 2.2: CARD PRINCIPAL DE DATOS -->
+        <div id="pique-card" class="bg-[#1a2a3a] p-8 rounded-2xl border-2 border-[#00BFFF]/30 shadow-lg shadow-[#00BFFF]/10">
+          <p class="text-gray-400 mb-2">Datos para: <span id="nombre-ciudad" class="font-bold text-[#00BFFF]">Azul, Buenos Aires</span></p>
+          <p id="ultima-actualizacion" class="text-xs text-gray-500 mb-6">Actualizando...</p>
+
+          <!-- SUB-BLOQUE 2.3: DATOS DE CLIMA -->
+          <div id="clima-datos" class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6 text-left">
+            <div class="bg-[#0a1a2a] p-4 rounded-lg"><p class="text-xs text-gray-400">Viento</p><p id="viento" class="text-2xl font-bold">-- km/h</p></div>
+            <div class="bg-[#0a1a2a] p-4 rounded-lg"><p class="text-xs text-gray-400">Temperatura</p><p id="temp" class="text-2xl font-bold">-- °C</p></div>
+            <div class="bg-[#0a1a2a] p-4 rounded-lg"><p class="text-xs text-gray-400">Nubosidad</p><p id="nubosidad" class="text-2xl font-bold">-- %</p></div>
+            <div class="bg-[#0a1a2a] p-4 rounded-lg"><p class="text-xs text-gray-400">Luna</p><p id="luna" class="text-2xl font-bold">--</p></div>
+          </div>
+
+          <!-- SUB-BLOQUE 2.4: ESTADO DEL PIQUE -->
+          <div class="mt-8">
+            <h3 class="text-2xl font-bold mb-4 text-[#00BFFF]">ESTADO DEL PIQUE</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="p-6 rounded-lg bg-[#0a1a2a]"><p class="font-bold text-lg mb-2">Pejerrey</p><p id="status-pejerrey" class="text-3xl font-bold">CARGANDO...</p></div>
+              <div class="p-6 rounded-lg bg-[#0a1a2a]"><p class="font-bold text-lg mb-2">Carpa</p><p id="status-carpa" class="text-3xl font-bold">CARGANDO...</p></div>
+            </div>
+          </div>
+
+          <!-- SUB-BLOQUE 2.5: PANEL DEL GUIA + HISTORIAL -->
+          <div class="mt-8 p-4 bg-[#0a1a2a] rounded-lg text-left border-l-4 border-[#00BFFF]">
+            <p class="font-bold text-[#00BFFF] mb-2">Opinión del Sistema:</p>
+            <p id="opinion-guia" class="text-gray-300 italic mb-6">Cargando...</p>
+
+            <p class="font-bold text-[#00BFFF] mb-2">Escribe tu Opinión:</p>
+            <div class="flex gap-2 mb-4">
+              <input type="text" id="input-opinion-guia" placeholder="Ej: Salió con mojarra a la mañana" class="w-full bg-[#1a2a3a] border-[#1a2a3a] rounded-lg px-4 py-2 text-white outline-none">
+              <button id="btn-guardar-opinion" class="bg-[#00BFFF] hover:bg-[#009acd] text-black font-bold px-4 py-2 rounded-lg">Guardar</button>
+            </div>
+
+            <div class="flex justify-between items-center mb-2">
+              <p class="font-bold text-[#00BFFF]">Opiniones de Hoy:</p>
+              <button id="btn-borrar-todas" class="text-xs text-red-500 hover:text-red-400">Borrar todas</button>
+            </div>
+            <div id="lista-opiniones" class="space-y-3 max-h-60 overflow-y-auto">
+              <!-- Se carga dinamicamente con JS -->
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-6">*El "pique" es una estimación. La última palabra la tiene el río.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================
+       BLOQUE 3: FOOTER
+  ============================================ -->
+  <footer class="bg-black py-8 px-6 border-t border-[#1a2a3a]">
+    <div class="max-w-7xl mx-auto text-center">
+      <p class="text-gray-400 mb-2">&copy; 2026 De la Caña al Plato. Pesca Responsable en PBA</p>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       BLOQUE 4: SCRIPT - LOGICA COMPLETA
+       OBJETIVO: Maneja API Clima + API Luna + CRUD Opiniones MySQL
+  ============================================ -->
+  <script>
+    // ================= CONFIGURACION GLOBAL =================
+    const API_KEY = '15951e36281a9f9043ab74845fe35dbd'; // API OpenWeatherMap
+    const CIUDAD_DEFAULT = 'Azul,AR'; // Ciudad al cargar
+    const URL_API = 'api_opiniones.php'; // Archivo PHP para CRUD MySQL
+
+    // EVENTO: Al cargar la pagina completa
+    document.addEventListener('DOMContentLoaded', () => {
+      inicializarPagina();
+    });
+
+    // FUNCION: inicializarPagina
+    // OBJETIVO: Disparar las cargas iniciales y los eventos de los botones
+    function inicializarPagina(){
+      cargarDatos(CIUDAD_DEFAULT); // 1. Carga clima
+      cargarOpiniones(); // 2. Carga opiniones de hoy desde MySQL
+
+      // Evento del buscador
+      document.getElementById('form-buscar').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const ciudadBuscada = document.getElementById('input-ciudad').value;
+        if(ciudadBuscada) cargarDatos(ciudadBuscada + ',AR');
+      });
+
+      // Eventos del Panel del Guia
+      document.getElementById('btn-guardar-opinion').addEventListener('click', guardarOpinion);
+      document.getElementById('btn-borrar-todas').addEventListener('click', borrarTodas);
+    }
+
+    // ================= SECCION: CRUD OPINIONES MYSQL =================
+
+    // FUNCION: guardarOpinion
+    // OBJETIVO: Enviar la opinion del input al PHP para que la guarde en MySQL
+    // PARAMETROS: Ninguno. Lee del input #input-opinion-guia
+    async function guardarOpinion() {
+      const texto = document.getElementById('input-opinion-guia').value.trim();
+      if(texto === "") { alert("Escribí una opinión primero"); return; }
+
+      try {
+        const response = await fetch(URL_API, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            texto: texto,
+            ciudad: document.getElementById('nombre-ciudad').innerText
+          })
+        });
+        if(!response.ok) throw new Error("Error en el servidor");
+        document.getElementById('input-opinion-guia').value = ""; // Limpia input
+        cargarOpiniones(); // Recarga la lista
+      } catch (error) {
+        alert("Error al guardar. Revisa api_opiniones.php y la conexion a BD");
+        console.error(error);
+      }
+    }
+
+    // FUNCION: cargarOpiniones
+    // OBJETIVO: Pedirle al PHP las opiniones de HOY y dibujarlas en el HTML
+    async function cargarOpiniones() {
+      try {
+        const res = await fetch(URL_API); // GET por defecto
+        let opiniones = await res.json();
+        const contenedor = document.getElementById('lista-opiniones');
+        contenedor.innerHTML = ""; // Limpia antes de dibujar
+
+        if(opiniones.length === 0) {
+          contenedor.innerHTML = `<p class="text-gray-500 text-sm">Todavía no hay opiniones para hoy.</p>`;
+          return;
+        }
+        // Dibuja cada opinion con boton de borrar
+        opiniones.forEach(op => {
+          contenedor.innerHTML += `
+            <div id="opinion-${op.id}" class="bg-[#0a1a2a] p-3 rounded-lg text-left border-l-2 border-[#00BFFF] flex justify-between items-start">
+              <div>
+                <p class="text-gray-200 italic">"${op.texto}"</p>
+                <p class="text-xs text-gray-400 mt-2">${op.hora} hs - ${op.ciudad}</p>
+              </div>
+              <button onclick="borrarOpinion(${op.id})" class="text-red-500 hover:text-red-400 text-xs ml-4 font-bold">X</button>
+            </div>
+          `;
+        });
+      } catch (error) {
+        document.getElementById('lista-opiniones').innerHTML = `<p class="text-red-500 text-sm">Error cargando opiniones</p>`;
+        console.error(error);
+      }
+    }
+
+    // FUNCION: borrarOpinion
+    // OBJETIVO: Borrar 1 opinion especifica por ID
+    // PARAMETROS: id - El ID de la opinion en MySQL
+    async function borrarOpinion(id) {
+      if(!confirm("¿Borrar esta opinión?")) return;
+      await fetch(URL_API, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ id: id })
+      });
+      cargarOpiniones();
+    }
+
+    // FUNCION: borrarTodas
+    // OBJETIVO: Borrar todas las opiniones del dia de hoy
+    async function borrarTodas() {
+      if(!confirm("¿Borrar TODAS las opiniones de hoy?")) return;
+      await fetch(URL_API, { method: 'DELETE' }); // Sin ID = borra todas de hoy
+      cargarOpiniones();
+    }
+
+    // ================= SECCION: API CLIMA Y CALCULO PIQUE =================
+
+    // FUNCION: cargarDatos
+    // OBJETIVO: Llamar a API Clima y API Luna. Actualiza el HTML
+    // PARAMETROS: ciudad - string "Ciudad,AR"
+    async function cargarDatos(ciudad) {
+      mostrarCargando(true);
+      try {
+        // 1. Llamada a OpenWeatherMap
+        const resClima = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${API_KEY}&units=metric&lang=es`);
+        if(!resClima.ok) throw new Error("Ciudad no encontrada");
+        const dataClima = await resClima.json();
+
+        // 2. Llamada a API de Fases Lunares
+        const resLuna = await fetch(`https://api.farmsense.net/v1/moonphases/?d=${Math.floor(Date.now()/1000)}`);
+        const dataLuna = await resLuna.json();
+
+        // 3. Actualizar HTML con datos
+        document.getElementById('nombre-ciudad').innerText = `${dataClima.name}, ${dataClima.sys.country}`;
+        document.getElementById('viento').innerText = `${Math.round(dataClima.wind.speed * 3.6)} km/h`;
+        document.getElementById('temp').innerText = `${Math.round(dataClima.main.temp)} °C`;
+        document.getElementById('nubosidad').innerText = `${dataClima.clouds.all}%`;
+        document.getElementById('luna').innerText = traducirLuna(dataLuna[0].Phase);
+        document.getElementById('ultima-actualizacion').innerText = `Última actualización: ${new Date().toLocaleTimeString('es-AR')}`;
+
+        // 4. Calcular pique con los datos nuevos
+        calcularPique(dataClima.wind.speed, dataLuna[0].Phase);
+      } catch (error) {
+        alert("No se pudo encontrar la ciudad. Probá con 'Ciudad, AR'");
+        mostrarCargando(false);
+      }
+    }
+
+    // FUNCION: traducirLuna
+    // OBJETIVO: Traducir el texto en ingles de la API a Español
+    // PARAMETROS: phase - string de la API
+    function traducirLuna(phase) {
+      if(phase.includes("Full")) return "Luna Llena";
+      if(phase.includes("New")) return "Luna Nueva";
+      if(phase.includes("First Quarter")) return "Cuarto Creciente";
+      if(phase.includes("Last Quarter")) return "Cuarto Menguante";
+      return "Luna";
+    }
+
+    // FUNCION: calcularPique
+    // OBJETIVO: Logica de negocio. Segun viento y luna da un puntaje y opinion
+    // PARAMETROS: viento_ms - numero, faseLuna - string
+    function calcularPique(viento_ms, faseLuna) {
+      const viento_kmh = viento_ms * 3.6;
+      let puntajePejerrey = 50; // Base 50
+      let puntajeCarpa = 50; // Base 50
+      let opinion = "Condiciones normales para la pesca.";
+
+      // Reglas de negocio
+      if(viento_kmh < 15) { puntajePejerrey += 20; puntajeCarpa += 10; opinion = "Día ideal, poco viento. A pescar!"; }
+      if(viento_kmh > 30) { puntajePejerrey -= 30; puntajeCarpa -= 20; opinion = "Mucho viento. Mejor esperar o buscar reparo."; }
+      if(faseLuna.includes("Full") || faseLuna.includes("New")) { puntajePejerrey += 15; puntajeCarpa += 15; opinion += " Con esta luna el pique nocturno se activa."; }
+
+      // Actualizar HTML
+      setPique('status-pejerrey', puntajePejerrey);
+      setPique('status-carpa', puntajeCarpa);
+      document.getElementById('opinion-guia').innerText = opinion;
+      mostrarCargando(false);
+    }
+
+    // FUNCION: setPique
+    // OBJETIVO: Pintar el texto BUENO/REGULAR/MALO segun puntaje
+    // PARAMETROS: id - id del elemento, puntaje - numero 0 a 100
+    function setPique(id, puntaje) {
+      const el = document.getElementById(id);
+      if(puntaje > 70) { el.innerText = 'BUENO'; el.className = 'text-3xl font-bold pique-bueno'; }
+      else if(puntaje > 40) { el.innerText = 'REGULAR'; el.className = 'text-3xl font-bold pique-regular'; }
+      else { el.innerText = 'MALO'; el.className = 'text-3xl font-bold pique-malo'; }
+    }
+
+    // FUNCION: mostrarCargando
+    // OBJETIVO: Mostrar estado de carga mientras busca datos
+    function mostrarCargando(estado) {
+      const texto = estado? 'CARGANDO...' : 'ERROR';
+      document.getElementById('status-pejerrey').innerText = texto;
+      document.getElementById('status-carpa').innerText = texto;
+    }
+  </script>
+</body>
+</html>

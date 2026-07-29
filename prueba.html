@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación del Clima Pro</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1f4068, #162447, #070d19);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .weather-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 30px;
+            width: 350px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .search-box {
+            display: flex;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 5px 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 16px;
+            padding: 8px;
+            width: 80%;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box button {
+            background: #e43f5a;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #ff4a68;
+            transform: scale(1.05);
+        }
+
+        .weather-info {
+            display: none; /* Se activa con JavaScript */
+            animation: fadeIn 0.6s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .city {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 10px 0 0 0;
+            letter-spacing: 0.5px;
+        }
+
+        .icon-container img {
+            width: 100px;
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .temp {
+            font-size: 54px;
+            font-weight: 700;
+            margin: -10px 0 5px 0;
+        }
+
+        .desc {
+            font-size: 16px;
+            text-transform: capitalize;
+            color: #00fff0;
+            margin-bottom: 25px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 14px;
+        }
+
+        .detail-item span {
+            display: block;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
+
+        .detail-item p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="weather-card">
+        <div class="search-box">
+            <input type="text" id="ciudad" placeholder="Escribe una ciudad...">
+            <button id="botonBuscar">➔</button>
+        </div>
+
+        <div id="error" class="error-message"></div>
+
+        <div id="weatherInfo" class="weather-info">
+            <h2 class="city" id="cityName">--</h2>
+            
+            <div class="icon-container">
+                <img id="weatherIcon" src="" alt="Icono Clima">
+            </div>
+
+            <div class="temp" id="tempValue">--°C</div>
+            <div class="desc" id="weatherDesc">--</div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span>Humedad</span>
+                    <p id="humidityValue">--%</p>
+                </div>
+                <div class="detail-item">
+                    <span>Viento</span>
+                    <p id="windValue">-- km/h</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN: Introduce tu clave de OpenWeatherMap aquí
+        const API_KEY = "15951e36281a9f9043ab74845fe35dbd"; 
+
+        const boton = document.getElementById('botonBuscar');
+        const inputCiudad = document.getElementById('ciudad');
+
+        // Permitir buscar presionando 'Enter'
+        inputCiudad.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') boton.click();
+        });
+
+        boton.addEventListener('click', () => {
+            const ciudad = inputCiudad.value.trim();
+            const errorDiv = document.getElementById('error');
+            const infoDiv = document.getElementById('weatherInfo');
+
+            if (ciudad === "") return;
+
+            errorDiv.textContent = "";
+            const url = `https://openweathermap.org{ciudad}&appid=${API_KEY}&units=metric&lang=es`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error('Ciudad no encontrada');
+                    return response.json();
+                })
+                .then(data => {
+                    // Mapeo de datos al HTML
+                    document.getElementById('cityName').textContent = data.name;
+                    document.getElementById('tempValue').textContent = `${Math.round(data.main.temp)}°C`;
+                    document.getElementById('weatherDesc').textContent = data.weather[0].description;
+                    document.getElementById('humidityValue').textContent = `${data.main.humidity}%`;
+                    document.getElementById('windValue').textContent = `${Math.round(data.wind.speed * 3.6)} km/h`; // Convierte m/s a km/h
+
+                    // Configurar icono oficial de OpenWeather
+                    const iconCode = data.weather[0].icon;
+                    document.getElementById('weatherIcon').src = `https://openweathermap.org{iconCode}@2x.png`;
+
+                    // Mostrar el panel de información con animación
+                    infoDiv.style.display = "block";
+                })
+                .catch(error => {
+                    infoDiv.style.display = "none";
+                    errorDiv.textContent = error.message;
+                });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+
+DE LA CAÑA AL PLATO - SITIO WEB
+Versión: 2.1
+Última actualización: 29/07/2026
+Desarrollado por: [Tu Nombre]
+
+
+1. DESCRIPCIÓN DEL PROYECTO
+Sitio web informativo para pescadores de Argentina. 
+Incluye: Pronóstico + Estado del Pique, Reglas PBA actualizadas, 
+Zonas de pesca, Recetas y Panel del Guía.
+
+2. ESTRUCTURA DE ARCHIVOS Y CARPETAS
+
+/public_html/
+  |-- index.html              -> HOME. Landing principal
+  |-- pronostico.html         -> Clima + Pique + Panel del Guía
+  |-- reglas.html             -> Reglas de pesca PBA
+  |-- api_opiniones.php       -> Backend para guardar/leer opiniones
+  |-- reglas.json             -> Base de datos de medidas y cupos
+  |-- /assets/                -> Imágenes, CSS, JS
+  |-- /db/                    -> Configuración de conexión MySQL
+  |-- Readme.txt              -> Este archivo
+
+3. TECNOLOGÍAS UTILIZADAS
+Frontend:  HTML5, TailwindCSS, JavaScript Vanilla
+Backend:   PHP 8
+Base de Datos: MySQL
+APIs:      OpenWeatherMap, SunCalc.js
+
+4. CONFIGURACIÓN E INSTALACIÓN
+
+PASO 1: Base de Datos
+1. Crear BD en MySQL: nombre sugerido: `decanialplato_db`
+2. Ejecutar este SQL:
+   CREATE TABLE opiniones_pique (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     guia_nombre VARCHAR(100),
+     zona VARCHAR(100),
+     comentario TEXT,
+     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+
+PASO 2: Conexión
+Editar `/db/conexion.php` con tus datos:
+  $host = "localhost";
+  $user = "tu_usuario";
+  $pass = "tu_password";
+  $db   = "decanialplato_db";
+
+PASO 3: API Key
+En `pronostico.html` línea 45, reemplazar `TU_API_KEY` por tu key de OpenWeatherMap
+
+5. MANTENIMIENTO Y ACTUALIZACIONES
+
+Archivo a editar cada 6 meses: reglas.json
+    - Medidas mínimas de peces
+    - Cupos por especie  
+    - Fechas de veda
+
+Archivo a editar si expira API: pronostico.html
+    - Buscar "TU_API_KEY"
+
+Limpieza automática: 
+    - El Panel del Guía se resetea solo a las 00:00hs
+
+6. MEJORAS A FUTURO - ROADMAP
+
+FASE 1: Seguridad
+  [ ] Login para Panel del Guía
+  [ ] Anti-Spam y Captcha
+  [ ] Buscador en página de Reglas
+
+FASE 2: Contenido
+  [ ] Pronóstico extendido a 5 días
+  [ ] Mapa interactivo con puntos de pesca
+  [ ] Votación de pique por usuarios
+
+FASE 3: Monetización
+  [ ] Sección Blog para SEO
+  [ ] Directorio de Guías pagos
+  [ ] Convertir sitio en PWA/App
+
+7. NOTAS IMPORTANTES
+- No subir la carpeta /db/ con datos reales a GitHub
+- Hacer backup de reglas.json antes de cada actualización
+- El sitio está optimizado para Mobile First
+
+8. CONTACTO Y SOPORTE
+Para dudas sobre el código: [tu mail]
+Para reporte de bugs: Crear issue en GitHub
+
+DOCUMENTO INTERNO - USO EXCLUSIVO DEL EQUIPO
