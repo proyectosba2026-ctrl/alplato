@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================
+       BLOQUE 1: HEAD - CONFIGURACION GLOBAL
+       FUNCION: Metadatos, fuentes, Tailwind y estilos base
+       PARA CORREGIR: Cambiar titulo, colores, fuentes
+  ============================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>De la Caña al Plato | Pesca y Cocina en Buenos Aires</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Lato', sans-serif; scroll-behavior: smooth; }
+    h1, h2, h3 { font-family: 'Oswald', sans-serif; }
+  </style>
+</head>
+
+<body class="bg-[#0a1a2a] text-white">
+
+  <!-- ============================================
+       BLOQUE 2: HEADER / NAVBAR
+       FUNCION: Menu fijo superior con logo y enlaces
+       ID: #header
+       PARA CORREGIR: Agregar/quitar links, cambiar logo
+  ============================================ -->
+  <header class="fixed top-0 left-0 w-full bg-[#0a1a2a]/90 backdrop-blur-md z-50 border-b border-[#1a2a3a]">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <img src="logo-caña2.png" alt="Logo De la Caña al Plato" class="w-12 h-12 object-contain">
+        <h1 class="text-2xl font-bold text-[#00BFFF]">DE LA CAÑA AL PLATO</h1>
+      </div>
+      <nav class="hidden md:flex gap-6">
+        <a href="#mapa" class="hover:text-[#00BFFF] transition">Spots</a>
+        <a href="#platos" class="hover:text-[#00BFFF] transition">Platos Estrellas</a>
+        <a href="#videos" class="hover:text-[#00BFFF] transition">YouTube</a>
+        <a href="#galeria" class="hover:text-[#00BFFF] transition">Galería</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================================
+       BLOQUE 3: HERO
+       FUNCION: Portada con 2 imagenes de fondo 50/50
+       NOTA: Izquierda al 70% centrada. Derecha full
+       ARREGLO: Agregado 'flex' para que funcione md:flex-row
+  ============================================ -->
+  <section class="relative w-full h-screen pt-20 flex items-center justify-center">
+    <div class="absolute inset-0 flex flex-col md:flex-row px-[20px] gap-[20px]">
+
+      <!-- SUB-BLOQUE 3A: FONDO IZQUIERDA -->
+      <div class="w-full md:w-1/2 h-1/2 md:h-full rounded-2xl flex items-center justify-center bg-[#0a1a2a]">
+        <div class="w-[70%] h-[70%] rounded-2xl bg-cover bg-center shadow-2xl"
+             style="background-image: url('imagenes/izquierda.jpg');">
+          <div class="w-full h-full bg-black/60 rounded-2xl"></div>
+        </div>
+      </div>
+
+      <!-- SUB-BLOQUE 3B: FONDO DERECHA -->
+      <div class="w-full md:w-1/2 h-1/2 md:h-full rounded-2xl bg-cover bg-center"
+           style="background-image: url('imagenes/derecha.jpg');">
+        <div class="w-full h-full bg-black/60 rounded-2xl"></div>
+      </div>
+    </div>
+
+    <!-- SUB-BLOQUE 3C: CONTENIDO DE TEXTO ENCIMA -->
+    <div class="relative z-10 text-center px-4">
+      <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 text-[#00BFFF] drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">DE LA CAÑA AL PLATO</h1>
+      <p class="text-lg sm:text-xl md:text-2xl mb-8 max-w-3xl mx-auto drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">De la laguna al fuego. Pesca y cocina en toda la Provincia de Buenos Aires</p>
+      <a href="#mapa" class="bg-[#00BFFF] hover:bg-[#009acd] text-black font-bold py-3 px-8 rounded-full text-lg transition-all hover:scale-105">Ver Spots de Pesca</a>
+    </div>
+  </section>
+
+  <!-- ============================================
+       BLOQUE 4: SOBRE EL STREAMING
+       FUNCION: 3 cards explicativas Pesca/Cocina/Mapa
+       ID: Sin ID
+       PARA CORREGIR: Cambiar texto, iconos, cantidad de cards
+  ============================================ -->
+  <section class="py-20 px-6 max-w-5xl mx-auto">
+    <h2 class="text-4xl font-bold text-center mb-10 text-[#00BFFF]">¿DE QUÉ VA EL STREAMING?</h2>
+    <div class="grid md:grid-cols-3 gap-8 text-center">
+      <div class="bg-[#1a2a3a] p-6 rounded-xl hover:-translate-y-2 transition duration-300">
+        <div class="text-5xl mb-4">🎣</div>
+        <h3 class="text-2xl font-bold mb-2">PESCA</h3>
+        <p>Visitamos lagunas, arroyos, ríos y costa marítima de Buenos Aires. Te mostramos los mejores puntos y piques.</p>
+      </div>
+      <div class="bg-[#1a2a3a] p-6 rounded-xl hover:-translate-y-2 transition duration-300">
+        <div class="text-5xl mb-4">🔥</div>
+        <h3 class="text-2xl font-bold mb-2">COCINA</h3>
+        <p>Cocinamos el pescado que sacamos. Recetas según la especie y su proveniencia. Del río directo a la parrilla.</p>
+      </div>
+      <div class="bg-[#1a2a3a] p-6 rounded-xl hover:-translate-y-2 transition duration-300">
+        <div class="text-5xl mb-4">📍</div>
+        <h3 class="text-2xl font-bold mb-2">MAPA</h3>
+        <p>Ubicación real de cada spot. Con Google Maps para que vayas a pescar vos también.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       BLOQUE 5: MAPA SPOTS
+       FUNCION: Incrustar Google Mis Mapas
+       ID: #mapa
+       PARA CORREGIR: Cambiar el "mid" del iframe por tu mapa nuevo
+  ============================================ -->
+  <section id="mapa" class="py-20 bg-[#1a2a3a] px-[20px]">
+    <h2 class="text-4xl font-bold text-center mb-10 text-[#00BFFF]">SPOTS DE PESCA BA</h2>
+    <p class="text-center mb-8">Lagunas, arroyos, ríos y costa. Todos geolocalizados</p>
+
+    <div class="max-w-6xl mx-auto rounded-2xl overflow-hidden border-[#00BFFF]/30 shadow-lg shadow-[#00BFFF]/10">
+      <!-- SOLO CAMBIA EL "mid=" PARA ACTUALIZAR EL MAPA -->
+      <iframe src="https://www.google.com/maps/d/embed?mid=1XKIJEEq5qfC-pelW76RWUakvHkDMIiA&ehbc=2E312F"
+        width="100%"
+        height="550"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <div class="text-center mt-6">
+      <p class="mb-4 text-sm text-gray-400">Tip: Hacé clic en cada marcador para ver especie y pique</p>
+      <a href="https://www.google.com/maps/d/viewer?mid=1XKIJEEq5qfC-pelW76RWUakvHkDMIiA" target="_blank"
+         class="inline-block bg-[#00BFFF] hover:bg-[#009acd] text-black font-bold py-3 px-6 rounded-full transition hover:scale-105">
+        🗺️ Abrir Mapa Completo en Google Maps
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================
+       BLOQUE 6: PLATOS ESTRELLAS
+       FUNCION: Grid de 3 recetas con imagen + PDF
+       ID: #platos
+       PARA CORREGIR: Duplicar un "div" para agregar receta nueva
+  ============================================ -->
+  <section id="platos" class="py-20 px-6 max-w-6xl mx-auto">
+    <h2 class="text-4xl font-bold text-center mb-4 text-[#00BFFF]">NUESTROS PLATOS ESTRELLAS</h2>
+    <p class="text-center mb-12 text-gray-300">Recetas sacadas del agua y directo a tu parrilla</p>
+    <div class="grid md:grid-cols-3 gap-8">
+
+      <!-- CARD 1 -->
+      <div class="bg-[#1a2a3a] rounded-xl overflow-hidden group hover:-translate-y-2 transition duration-300 flex-col">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800" alt="Pejerrey frito" class="w-full h-48 object-cover">
+        <div class="p-6 flex-col flex-grow">
+          <h3 class="text-2xl font-bold mb-2 text-[#00BFFF]">Pejerrey Frito al Limón</h3>
+          <p class="text-sm text-gray-400 mb-3">Laguna Chis Chis</p>
+          <p class="text-gray-300 mb-4 flex-grow">Clásico crocante por fuera, jugoso por dentro. Con papas rústicas y chimichurri de río.</p>
+          <a href="recetas/pejerrey-frito.pdf" download class="mt-auto bg-[#00BFFF] hover:bg-[#009acd] text-black font-bold py-2 px-4 rounded-lg text-center transition">📄 Ver Receta Completa</a>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="bg-[#1a2a3a] rounded-xl overflow-hidden group hover:-translate-y-2 transition duration-300 flex-col">
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800" alt="Corvina a la parrilla" class="w-full h-48 object-cover">
+        <div class="p-6 flex-col flex-grow">
+          <h3 class="text-2xl font-bold mb-2 text-[#00BFFF]">Corvina a la Parrilla</h3>
+          <p class="text-sm text-gray-400 mb-3">Costa Mar del Plata</p>
+          <p class="text-gray-300 mb-4 flex-grow">Entera a las brasas con sal gruesa. Acompañada de ensalada criolla y vino blanco bien frío.</p>
+          <a href="recetas/corvina-parrilla.pdf" download class="mt-auto bg-[#00BFFF] hover:bg-[#009acd] text-black font-bold py-2 px-4 rounded-lg text-center transition">📄 Ver Receta Completa</a>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="bg-[#1a2a3a] rounded-xl overflow-hidden group hover:-translate-y-2 transition duration-300 flex-col">
+        <img src="https://images.unsplash.com/photo-1564834744159-9638fb7abf84?q=80&w=800" alt="Guiso de pescado" class="w-full h-48 object-cover">
+        <div class="p-6 flex-col flex-grow">
+          <h3 class="text-2xl font-bold mb-2 text-[#00BFFF]">Guiso de Bagre y Boga</h3>
+          <p class="text-sm text-gray-400 mb-3">Arroyo Azul</p>
+          <p class="text-gray-300 mb-4 flex-grow">Calentito para el frío. Con verduras de huerta, pimentón ahumado y mucho amor de campamento.</p>
+          <a href="recetas/guiso-bagre-boga.pdf" download class="mt-auto bg-[#00BFFF] hover:bg-[#009acd] text-black font-bold py-2 px-4 rounded-lg text-center transition">📄 Ver Receta Completa</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       BLOQUE 7: VIDEOS YOUTUBE
+       FUNCION: Grid de 3 videos embed
+       ID: #videos
+       PARA CORREGIR: Cambiar VIDEO_ID_1 por el ID real de youtube
+  ============================================ -->
+  <section id="videos" class="py-20 px-6 max-w-6xl mx-auto">
+    <h2 class="text-4xl font-bold text-center mb-10 text-[#00BFFF]">PROGRAMAS EN YOUTUBE</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-[#1a2a3a] rounded-xl overflow-hidden hover:-translate-y-2 transition duration-300">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/VIDEO_ID_1" title="Video 1" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        <div class="p-4"><h3 class="font-bold">Pesca de Pejerrey en Laguna Chis Chis</h3><p class="text-sm text-gray-400">+ Receta: Peje frito al limón</p></div>
+      </div>
+      <div class="bg-[#1a2a3a] rounded-xl overflow-hidden hover:-translate-y-2 transition duration-300">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/VIDEO_ID_2" title="Video 2" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        <div class="p-4"><h3 class="font-bold">Costa Marítima: Corvina en Mar del Plata</h3><p class="text-sm text-gray-400">+ Receta: Corvina a la parrilla</p></div>
+      </div>
+      <div class="bg-[#1a2a3a] rounded-xl overflow-hidden hover:-translate-y-2 transition duration-300">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/VIDEO_ID_3" title="Video 3" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        <div class="p-4"><h3 class="font-bold">Arroyo Azul: Bagre y Boga</h3><p class="text-sm text-gray-400">+ Receta: Guiso de pescado</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       BLOQUE 8: GALERIA
+       FUNCION: Grid de 4 fotos
+       ID: #galeria
+       PARA CORREGIR: Agregar/quitar img. Cambiar src
+  ============================================ -->
+  <section id="galeria" class="py-20 bg-[#1a2a3a] px-6">
+    <h2 class="text-4xl font-bold text-center mb-10 text-[#00BFFF]">FOTOS Y VIDEOS DE LA ZONA</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
+      <img src="imagenes/01.jpg" alt="Foto 1 de la zona" class="rounded-lg w-full h-48 object-cover hover:scale-105 transition duration-300">
+      <img src="imagenes/02.jpg" alt="Foto 2 de la zona" class="rounded-lg w-full h-48 object-cover hover:scale-105 transition duration-300">
+      <img src="imagenes/03.jpg" alt="Foto 3 de la zona" class="rounded-lg w-full h-48 object-cover hover:scale-105 transition duration-300">
+      <img src="imagenes/04.jpg" alt="Foto 4 de la zona" class="rounded-lg w-full h-48 object-cover hover:scale-105 transition duration-300">
+    </div>
+  </section>
+
+  <!-- ============================================
+       BLOQUE 9: CTA YOUTUBE
+       FUNCION: Boton grande para ir al canal
+       ID: Sin ID
+       PARA CORREGIR: Cambiar link de youtube
+  ============================================ -->
+  <section class="py-20 text-center px-6">
+    <h2 class="text-4xl font-bold mb-4">¿TE SUBÍS A LA CAÑA?</h2>
+    <p class="mb-8">Suscribite a YouTube y seguí todos los programas</p>
+    <a href="https://youtube.com" target="_blank" class="bg-red-600 hover:bg-red-700 font-bold py-3 px-8 rounded-full text-lg transition">IR AL CANAL</a>
+  </section>
+
+  <!-- ============================================
+       BLOQUE 10: FOOTER
+       FUNCION: Pie de pagina
+       ID: Sin ID
+       PARA CORREGIR: Cambiar año y texto legal
+  ============================================ -->
+  <footer class="bg-black py-6 text-center text-gray-500">
+    <p>De la Caña al Plato © 2026 | Pesca responsable en Buenos Aires</p>
+  </footer>
+
+</body>
+</html>
